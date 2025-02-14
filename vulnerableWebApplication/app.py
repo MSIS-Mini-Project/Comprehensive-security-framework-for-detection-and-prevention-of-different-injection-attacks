@@ -121,6 +121,6 @@ if __name__ == '__main__':
         s.bind(("127.0.0.1", 0))  # Bind to an available port
         _, port = s.getsockname()  # Get the assigned port
     
-    print(f"Running on http://127.0.0.1:{port}")  # Display the port
-    app.run(debug=True, host="127.0.0.1", port=port)
+    print(f"Running on http://0.0.0.0:{port}")  # Display the port
+    app.run(debug=True, host="0.0.0.0", port=port)
 
