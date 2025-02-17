@@ -1,6 +1,6 @@
 import pymysql
 import socket
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Required for session management
@@ -24,100 +24,119 @@ def get_db_connection():
 def home():
     return render_template('home.html')
 
-# 🔴 Registration Page (More Vulnerable to SQL Injection)
+# 🔴 Registration Page (Vulnerable to SQL Injection)
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        bank_account = request.form['bank_account']
-        credit_card = request.form['credit_card']
+        username = request.form.get('username', '')
+        email = request.form.get('email', '')
+        password = request.form.get('password', '')  # Storing password in plaintext (INSECURE)
+        bank_account = request.form.get('bank_account', '')
+        credit_card = request.form.get('credit_card', '')
 
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # 🔴 VULNERABLE: Directly concatenating user input (No exception handling)
-        query = f"""
-        INSERT INTO user (username, email, password, bank_account, credit_card)
-        VALUES ('{username}', '{email}', '{password}', '{bank_account}', '{credit_card}')
-        """
-        cursor.execute(query)
-        connection.commit()
-        
-        return "User registered successfully!"
+        try:
+            # 🔴 VULNERABLE: Directly concatenating user input
+            query = f"""
+            INSERT INTO user (username, email, password, bank_account, credit_card)
+            VALUES ('{username}', '{email}', '{password}', '{bank_account}', '{credit_card}')
+            """
+            cursor.execute(query)
+            connection.commit()
+            flash("User registered successfully!", "success")
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f"Error: {str(e)}", "error")
+            connection.rollback()
+        finally:
+            cursor.close()
+            connection.close()
 
     return render_template('register.html')
 
-# 🔴 Login Page (Fully Vulnerable to SQL Injection)
+# 🔴 Login Page (Vulnerable to SQL Injection)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        print("Raw Request Data:", request.data)
+        print("Form Data:", request.form)
+        
+        username = request.form.get('username', '')
+        password = request.form.get('password', '')
+
+        if not username or not password:
+            flash("Missing username or password!", "error")
+            return redirect(url_for('login'))
 
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # 🔴 VULNERABLE: Allowing UNION-based SQL Injection with correct column count
-        query = f"SELECT id, username, email, password, bank_account, credit_card FROM user WHERE username = '{username}' AND password = '{password}'"
         try:
-            print("Executing query:", query)
+            # 🔴 VULNERABLE: Directly inserting user input into SQL query
+            query = f"SELECT * FROM user WHERE username = '{username}' AND password = '{password}'"
+            print("Executing query:", query)  # Debugging
             cursor.execute(query)
             user = cursor.fetchone()
+            print("Query result:", user)  # Debugging Output
+
             if user:
                 session['user'] = user['username']
+                print("Login Successful. Redirecting to dashboard...")  # Debugging
                 return redirect(url_for('dashboard'))
             else:
-                return "Invalid credentials!"
+                flash("Invalid credentials!", "error")
+                return redirect(url_for('login'))
         except Exception as e:
-            return f"SQL Error: {str(e)}"
-    
+            flash(f"Error: {str(e)}", "error")
+        finally:
+            cursor.close()
+            connection.close()
+
     return render_template('login.html')
 
-# 🔴 Dashboard (Fetching User Data Insecurely, Allowing UNION Injection)
+# 🔴 Dashboard (Fetching User Data Insecurely)
 @app.route('/dashboard')
 def dashboard():
     if 'user' in session:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # 🔴 VULNERABLE: Making UNION Injection work by ensuring 6-column count
-        query = f"""
-        SELECT id, username, email, password, bank_account, credit_card FROM user WHERE username = '{session['user']}'
-        UNION SELECT NULL, database(), user(), 'dummy', 'dummy', 'dummy' FROM dual
-        """
-        try:
-            cursor.execute(query)
-            user = cursor.fetchone()
-            cursor.close()
-            connection.close()
+        query = f"SELECT * FROM user WHERE username = '{session['user']}'"
+        print("Executing query:", query)  # Debugging
+        cursor.execute(query)
+        user = cursor.fetchone()
+        print("Query result:", user)  # Debugging Output
 
-            if user:
-                return f"""
-                    <h2>Welcome, {user['username']}!</h2>
-                    <p>Email: {user['email']}</p>
-                    <p>Password: {user['password']}</p>
-                    <p>Bank Account: {user['bank_account']}</p>
-                    <p>Credit Card: {user['credit_card']}</p>
-                    <br>
-                    <a href='/logout'>Logout</a>
-                """
-            else:
-                return "User not found!"
-        except Exception as e:
-            return f"SQL Error: {str(e)}"
+        cursor.close()
+        connection.close()
+
+        if user:
+            return f"""
+                <h2>Welcome, {user['username']}!</h2>
+                <p>Email: {user['email']}</p>
+                <p>Bank Account: {user['bank_account']}</p>
+                <p>Credit Card: {user['credit_card']}</p>
+                <br>
+                <a href='/logout'>Logout</a>
+            """
+        else:
+            flash("User not found!", "error")
+            return redirect(url_for('login'))
     else:
-        return "Unauthorized access!"
+        flash("Session not found. Please login.", "error")
+        return redirect(url_for('login'))
 
 # Logout
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    return "Logged out successfully!"
+    flash("Logged out successfully!", "success")
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
 
-#end of the code
-
+    #updated code
+    #newbranch
