@@ -8,8 +8,8 @@ app.secret_key = "your_secret_key"  # Required for session management
 # MySQL Database Configuration
 DB_HOST = "127.0.0.1"
 DB_USER = "root"
-DB_PASSWORD = "----" # enter your password
-DB_NAME = "----" #enter the table name
+DB_PASSWORD = "anujna2634@2002" # enter your password
+DB_NAME = "flask_users" #enter the table name
 
 # Function to establish a MySQL connection
 def get_db_connection():
