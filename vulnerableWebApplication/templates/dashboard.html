@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <h2>Welcome, {{ user.username }}!</h2>
-        <p>Email: {{ user.email }}</p>
-        <p>Bank Account: {{ user.bank_account }}</p>
-        <p>Credit Card: {{ user.credit_card }}</p>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Bank Account: {{ user.bank_account }}</p>
+    <p>Credit Card: {{ user.credit_card }}</p>
+
+    <br>
+    <a href="/activity_log"><button>View Activity Log</button></a>  <!-- Added Activity Log Button -->
+    <a href="/logout"><button>Logout</button></a>  
+
 </body>
 </html>
-

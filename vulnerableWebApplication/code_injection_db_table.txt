@@ -1,0 +1,6 @@
+CREATE TABLE activity_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100),
+    action VARCHAR(255),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
